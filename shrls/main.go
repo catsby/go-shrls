@@ -4,18 +4,17 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
-
-	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"goji.io/pat"
 	"gopkg.in/yaml.v3"
 
-	"github.com/goji/httpauth"
+	// "github.com/goji/httpauth"
 	"goji.io"
 )
 
@@ -39,8 +38,10 @@ func (s *ShrlSettings) Parse(data []byte) error {
 	return yaml.Unmarshal(data, s)
 }
 
-var collection *mongo.Collection
-var ctx = context.TODO()
+var (
+	collection *mongo.Collection
+	ctx        = context.TODO()
+)
 
 var Settings ShrlSettings
 
@@ -102,24 +103,20 @@ func main() {
 	mux := goji.NewMux()
 	admin_mux := goji.SubMux()
 	api_mux := goji.SubMux()
+	shrl_mux := goji.SubMux()
 	curl_api_mux := goji.SubMux()
 
-	if Settings.AdminUsername != "" && Settings.AdminPassword != "" {
-		authOpts := httpauth.AuthOptions{
-			User:                Settings.AdminUsername,
-			Password:            Settings.AdminPassword,
-			UnauthorizedHandler: http.HandlerFunc(UnauthorizedWarning),
-		}
-		auth_middleware := httpauth.BasicAuth(authOpts)
-		api_mux.Use(auth_middleware)
-		admin_mux.Use(auth_middleware)
-		curl_api_mux.Use(auth_middleware)
-	}
-
-	// Admin
-	mux.Handle(pat.New("/admin/*"), admin_mux)
-	fs := http.FileServer(http.Dir(workdir + "/dist/"))
-	admin_mux.Handle(pat.Get("/*"), http.StripPrefix("/admin/", fs))
+	// if Settings.AdminUsername != "" && Settings.AdminPassword != "" {
+	// 	authOpts := httpauth.AuthOptions{
+	// 		User:                Settings.AdminUsername,
+	// 		Password:            Settings.AdminPassword,
+	// 		UnauthorizedHandler: http.HandlerFunc(UnauthorizedWarning),
+	// 	}
+	// 	auth_middleware := httpauth.BasicAuth(authOpts)
+	// 	api_mux.Use(auth_middleware)
+	// 	admin_mux.Use(auth_middleware)
+	// 	curl_api_mux.Use(auth_middleware)
+	// }
 
 	// Api
 	mux.Handle(pat.New("/api/*"), api_mux)
@@ -128,6 +125,18 @@ func main() {
 	api_mux.HandleFunc(pat.Put("/shrl/:shrl_id"), urlModify)
 	api_mux.HandleFunc(pat.Delete("/shrl/:shrl_id"), urlDelete)
 	api_mux.HandleFunc(pat.Post("/shrl"), urlNew)
+
+	// Frontend
+	// mux.HandleFunc(pat.Get("/"), defaultRedirect)
+	mux.Handle(pat.New("/shrl/*"), shrl_mux)
+	shrl_mux.HandleFunc(pat.Get("/:shrl"), resolveShrl)
+	shrl_mux.HandleFunc(pat.Get("/:shrl/:search"), resolveShrl)
+
+	// Admin
+	mux.Handle(pat.New("/*"), admin_mux)
+	fs := http.FileServer(http.Dir(workdir + "/dist/"))
+	// admin_mux.Handle(pat.Get("/*"), http.StripPrefix("/admin/", fs))
+	admin_mux.Handle(pat.Get("/*"), fs)
 
 	// Bookmarklet API
 	api_mux.HandleFunc(pat.Get("/bookmarklet/new"), bookmarkletNew)
@@ -138,11 +147,6 @@ func main() {
 	// Snippets
 	api_mux.HandleFunc(pat.Post("/snippet"), snippetUpload)
 	api_mux.HandleFunc(pat.Get("/snippet/:snippet_id"), snippetGet)
-
-	// Frontend
-	mux.HandleFunc(pat.Get("/"), defaultRedirect)
-	mux.HandleFunc(pat.Get("/:shrl"), resolveShrl)
-	mux.HandleFunc(pat.Get("/:shrl/:search"), resolveShrl)
 
 	// Curl API
 	mux.Handle(pat.New("/*"), curl_api_mux)
