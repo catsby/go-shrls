@@ -87,7 +87,7 @@ export default {
     },
     computed: {
         short_url: function() {
-            return "/" + this.shrl.alias;
+            return "/shrl/" + this.shrl.alias;
         },
         domain: function() {
             if (this.shrl.type == ShrlType.shortenedURL) {
