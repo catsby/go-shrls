@@ -17,7 +17,7 @@ app "shrls" {
     use "docker" {}
     registry {
       use "docker" {
-        image = "catsby.jfrog.io/shrls-docker/shrls"
+        image = "catsby.jfrog.io/shrl-docker/shrls"
         tag   = "latest"
 
         username = var.registry_username
