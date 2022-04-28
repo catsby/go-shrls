@@ -8,7 +8,7 @@ app "shrls" {
 
   config {
     env = {
-      mongo_url=var.mongo_url
+      MONGO_URI=var.mongo_url
     }
   }
 
