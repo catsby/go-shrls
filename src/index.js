@@ -57,8 +57,9 @@ const app = new Vue({
         </div>
 
         <div class="container mb-6 mt-4">
+<!-- add some content here -->
+Hello, Waypoint
 
-            
             <div class="columns is-centered">
                 <div class="column is-two-thirds">
                     <shrl-omnibar />
