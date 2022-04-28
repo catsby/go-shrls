@@ -9,6 +9,7 @@ app "shrls" {
   config {
     env = {
       MONGO_URI=var.mongo_url
+      SHRLS_PORT=var.port
     }
   }
 
@@ -38,7 +39,7 @@ app "shrls" {
     use "kubernetes" {
       // Sets up a load balancer to access released application
       load_balancer = true
-      port          = 3000
+      port          = var.port
     }
   }
 }
@@ -56,6 +57,12 @@ variable "regcred_secret" {
   default     = "regcred"
   type        = string
   description = "The existing secret name inside Kubernetes for authenticating to the container registry"
+}
+
+variable "port" {
+  default     = 3000
+  type        = number
+  description = "port the service is listening on"
 }
 
 variable "registry_username" {
