@@ -86,12 +86,12 @@ variable "registry_password" {
 }
 
 variable "mongo_url" {
-  type    = string
   default = dynamic("terraform-cloud", {
     organization = "hackweekfuntime"
     workspace    = "waypoint-demo-tfc"
     output       = "mongodb_url"
   })
+  type    = string
   sensitive   = true
   description = "db url to connect"
 }
