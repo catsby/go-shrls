@@ -44,14 +44,14 @@ app "shrls" {
   }
 }
 
-runner {
-  enabled = true
+# runner {
+#   enabled = true
 
-  data_source "git" {
-    url  = "https://github.com/catsby/go-shrls.git"
-    ref = "refs/heads/dev"
-  }
-}
+#   data_source "git" {
+#     url  = "https://github.com/catsby/go-shrls.git"
+#     ref = "refs/heads/dev"
+#   }
+# }
 
 variable "regcred_secret" {
   default     = "regcred"
