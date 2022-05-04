@@ -19,7 +19,8 @@ RUN npm install
 RUN npm run build-prod
 
 # Final Artifact
-FROM scratch
+# FROM scratch
+FROM alpine:3.14
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app/shrls ./
 COPY --from=frontend /app/dist/ /dist/
