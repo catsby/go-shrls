@@ -58,7 +58,7 @@ const app = new Vue({
 
         <div class="container mb-6 mt-4">
 <!-- add some content here -->
-Hello HashiConf Europe Demo V1
+Hello HashiConf Europe Demo V2
 <!-- end -->
 
             <div class="columns is-centered">
