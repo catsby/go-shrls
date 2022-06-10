@@ -1,9 +1,9 @@
-project = "shrls"
+project = "hashiconf-demo"
 
 app "shrls" {
   labels = {
     "service" = "shrls",
-    "env"     = "dev"
+    # "env"     = "dev"
   }
 
   config {
@@ -14,7 +14,10 @@ app "shrls" {
   }
 
   build {
+    // Use Dockerfile to build the application
     use "docker" {}
+
+    // Use JFrog registry to store the artifact/image
     registry {
       use "docker" {
         image = "catsby.jfrog.io/shrl-docker/shrls"
@@ -22,7 +25,7 @@ app "shrls" {
 
         username = var.registry_username
         password = var.registry_password
-        local = false
+        # local = false
       }
     }
   }
@@ -30,7 +33,8 @@ app "shrls" {
   deploy {
     use "kubernetes" {
       probe_path = "/"
-      image_secret = var.regcred_secret
+      // Kube secret for pulling image from registry
+      image_secret = var.registrycreds_secret
     }
   }
 
@@ -43,6 +47,7 @@ app "shrls" {
   }
 }
 
+// On-Demand Runner configuration
 runner {
   enabled = true
 
@@ -50,47 +55,4 @@ runner {
     url  = "https://github.com/catsby/go-shrls.git"
     ref = "refs/heads/dev"
   }
-}
-
-variable "regcred_secret" {
-  default     = "regcred"
-  type        = string
-  description = "The existing secret name inside Kubernetes for authenticating to the container registry"
-}
-
-# variable "port" {
-#   default     = 3000
-#   type        = number
-#   description = "port the service is listening on"
-# }
-
-variable "registry_username" {
-  default = dynamic("vault", {
-    path = "secret/data/jfrogcreds"
-    key = "/data/username"
-  })
-  type        = string
-  sensitive   = true
-  description = "username for container registry"
-}
-
-variable "registry_password" {
-  default = dynamic("vault", {
-    path = "secret/data/jfrogcreds"
-    key = "/data/password"
-  })
-  type        = string
-  sensitive   = true
-  description = "password for registry" // DO NOT COMMIT YOUR PASSWORD TO GIT
-}
-
-variable "mongo_uri" {
-  default = dynamic("terraform-cloud", {
-    organization = "waypoint-demos"
-    workspace    = "hashiconf-demo"
-    output       = "dev_mongodb_uri"
-  })
-  type    = string
-  sensitive   = true
-  description = "db uri to connect"
 }
