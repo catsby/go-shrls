@@ -9,7 +9,7 @@ app "shrls" {
   config {
     env = {
       MONGO_URI=var.mongo_uri
-      SHRLS_PORT=var.port
+      SHRLS_PORT=3000
     }
   }
 
@@ -38,7 +38,7 @@ app "shrls" {
     use "kubernetes" {
       // Sets up a load balancer to access released application
       load_balancer = true
-      port          = var.port
+      # port          = var.port
     }
   }
 }
@@ -58,11 +58,11 @@ variable "regcred_secret" {
   description = "The existing secret name inside Kubernetes for authenticating to the container registry"
 }
 
-variable "port" {
-  default     = 3000
-  type        = number
-  description = "port the service is listening on"
-}
+# variable "port" {
+#   default     = 3000
+#   type        = number
+#   description = "port the service is listening on"
+# }
 
 variable "registry_username" {
   default = dynamic("vault", {
@@ -86,8 +86,8 @@ variable "registry_password" {
 
 variable "mongo_uri" {
   default = dynamic("terraform-cloud", {
-    organization = "tfc-waypoint-demo"
-    workspace    = "waypoint-demo-tfc"
+    organization = "waypoint-demos"
+    workspace    = "hashiconf-demo"
     output       = "dev_mongodb_uri"
   })
   type    = string
