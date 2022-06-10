@@ -43,16 +43,6 @@ app "short-urls" {
   }
 }
 
-// On-Demand Runner configuration
-runner {
-  enabled = true
-
-  data_source "git" {
-    url  = "https://github.com/catsby/go-shrls.git"
-    ref = "refs/heads/dev"
-  }
-}
-
 // Variables
 variable "registrycreds_secret" {
   default     = "registrycreds"
@@ -91,3 +81,12 @@ variable "mongo_uri" {
   description = "Mongo DB URI to connect"
 }
 
+// On-Demand Runner configuration
+runner {
+  enabled = true
+
+  data_source "git" {
+    url  = "https://github.com/catsby/go-shrls.git"
+    ref = "refs/heads/dev"
+  }
+}
