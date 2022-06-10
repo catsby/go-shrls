@@ -43,7 +43,7 @@ app "short-urls" {
     use "kubernetes" {
       // Sets up a load balancer to access released application
       load_balancer = true
-      # port          = var.port
+      port          = 8080
     }
   }
 }
