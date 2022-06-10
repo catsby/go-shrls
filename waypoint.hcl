@@ -32,6 +32,7 @@ app "short-urls" {
 
   deploy {
     use "kubernetes" {
+      // path for health checks
       probe_path = "/"
       // Kube secret for pulling image from registry
       image_secret = var.registrycreds_secret
