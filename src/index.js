@@ -58,7 +58,7 @@ const app = new Vue({
 
         <div class="container mb-6 mt-4">
 <!-- add some content here -->
-Hello, Demo v2
+Hello, Demo v3
 <!-- end -->
 
             <div class="columns is-centered">
