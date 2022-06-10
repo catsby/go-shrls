@@ -1,10 +1,7 @@
 project = "hashiconf-demo"
 
 app "short-urls" {
-  labels = {
-    "service" = "shrls",
-  }
-
+  // Set application configutation
   config {
     env = {
       MONGO_URI=var.mongo_uri
@@ -13,7 +10,7 @@ app "short-urls" {
   }
 
   build {
-    // Use Dockerfile to build the application
+    // Use included Dockerfile to build the application
     use "docker" {}
 
     // Use JFrog registry to store the artifact/image
