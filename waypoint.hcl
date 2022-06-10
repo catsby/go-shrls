@@ -8,7 +8,7 @@ app "shrls" {
 
   config {
     env = {
-      MONGO_URI=var.mongo_url
+      MONGO_URI=var.mongo_uri
       SHRLS_PORT=var.port
     }
   }
@@ -84,13 +84,13 @@ variable "registry_password" {
   description = "password for registry" // DO NOT COMMIT YOUR PASSWORD TO GIT
 }
 
-variable "mongo_url" {
+variable "mongo_uri" {
   default = dynamic("terraform-cloud", {
-    organization = "hackweekfuntime"
+    organization = "tfc-waypoint-demo"
     workspace    = "waypoint-demo-tfc"
-    output       = "mongodb_url"
+    output       = "dev_mongodb_uri"
   })
   type    = string
   sensitive   = true
-  description = "db url to connect"
+  description = "db uri to connect"
 }
