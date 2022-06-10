@@ -1,43 +1,5 @@
 project = "hashiconf-demo"
 
-// Variables
-variable "registrycreds_secret" {
-  default     = "registrycreds"
-  type        = string
-  description = "The existing secret name inside Kubernetes for authenticating to the container registry"
-}
-
-variable "registry_username" {
-  default = dynamic("vault", {
-    path = "secret/data/jfrogcreds"
-    key = "/data/username"
-  })
-  type        = string
-  sensitive   = true
-  description = "username for container registry"
-}
-
-variable "registry_password" {
-  default = dynamic("vault", {
-    path = "secret/data/jfrogcreds"
-    key = "/data/password"
-  })
-  type        = string
-  sensitive   = true
-  description = "password for registry"
-}
-
-variable "mongo_uri" {
-  default = dynamic("terraform-cloud", {
-    organization = "waypoint-demos"
-    workspace    = "hashiconf-demo"
-    output       = "dev_mongodb_uri"
-  })
-  type    = string
-  sensitive   = true
-  description = "Mongo DB URI to connect"
-}
-
 app "short-urls" {
   labels = {
     "service" = "shrls",
@@ -93,3 +55,42 @@ runner {
     ref = "refs/heads/dev"
   }
 }
+
+// Variables
+variable "registrycreds_secret" {
+  default     = "registrycreds"
+  type        = string
+  description = "The existing secret name inside Kubernetes for authenticating to the container registry"
+}
+
+variable "registry_username" {
+  default = dynamic("vault", {
+    path = "secret/data/jfrogcreds"
+    key = "/data/username"
+  })
+  type        = string
+  sensitive   = true
+  description = "username for container registry"
+}
+
+variable "registry_password" {
+  default = dynamic("vault", {
+    path = "secret/data/jfrogcreds"
+    key = "/data/password"
+  })
+  type        = string
+  sensitive   = true
+  description = "password for registry"
+}
+
+variable "mongo_uri" {
+  default = dynamic("terraform-cloud", {
+    organization = "waypoint-demos"
+    workspace    = "hashiconf-demo"
+    output       = "dev_mongodb_uri"
+  })
+  type    = string
+  sensitive   = true
+  description = "Mongo DB URI to connect"
+}
+
